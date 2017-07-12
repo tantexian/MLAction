@@ -1,11 +1,12 @@
 # coding=utf-8
 # @author tantexian, <my.oschina.net/tantexian>
 # @since 2017/7/11
-from numpy import *
 import unittest
 
+from numpy import *
 
-class TestNumpy(unittest.TestCase):
+
+class numpyTest(unittest.TestCase):
     def test_tile(self):
         intX = [1, 2]
         # 行方向重复2次，列方向重复3次
@@ -60,3 +61,9 @@ class TestNumpy(unittest.TestCase):
         a = arange(1).reshape(1, 1)
         print ("\n a == %s" % (a))
         print ("\n a.shape == %s a.shape[0] == %s\n" % (a.shape, a.shape[0]))
+
+    def test_one_zeros(self):
+        a = ones(10)
+        print ("\n a == %s" % (a))
+        a = zeros(10)
+        print ("\n a == %s" % (a))

@@ -1,13 +1,14 @@
 # coding=utf-8
 # @author tantexian, <my.oschina.net/tantexian>
 # @since 2017/7/11
-import trees
-import treePlotter
 import unittest
+
 import eyeWithID3
+import treePlotter
+import trees
 
 
-class TestTrees(unittest.TestCase):
+class treesTest(unittest.TestCase):
     def test_shannon(self):
         dataSet, labels = trees.createDataSet()
         print ("\n dataSet == %s" % (dataSet))

@@ -2,14 +2,15 @@
 # @author tantexian, <my.oschina.net/tantexian>
 # @since 2017/7/11
 
+import unittest
+
+import matplotlib.pyplot as plt
 from numpy import *
 
 import kNN
-import unittest
-import matplotlib.pyplot as plt
 
 
-class TestkNN(unittest.TestCase):
+class kNNTest(unittest.TestCase):
     def test_create(self):
         group, labels = kNN.createDateSet()
         print("group == %s\n labels == %s" % (group, labels))
