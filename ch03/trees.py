@@ -135,3 +135,31 @@ def createTree(dataSet, labels):
         # splitDataSet返回矩阵数据集上各行第bestFeat位置的值为value的行（不包括bestFeat位置元素），即根据最佳特征分割后的子数据集
         myTree[bestFeatLabel][value] = createTree(splitDataSet(dataSet, bestFeat, value), subLabels)
     return myTree
+
+
+def classify(inputTree, featLabels, testVec):
+    firstStr = inputTree.keys()[0]
+    secondDict = inputTree[firstStr]
+    featIndex = featLabels.index(firstStr)
+    key = testVec[featIndex]
+    valueOfFeat = secondDict[key]
+    if isinstance(valueOfFeat, dict):
+        classLabel = classify(valueOfFeat, featLabels, testVec)
+    else:
+        classLabel = valueOfFeat
+    return classLabel
+
+
+# 存储已经构建好的决策树（序列化）到磁盘
+def storeTree(inputTree, filename):
+    import pickle
+    fw = open(filename, 'w')
+    pickle.dump(inputTree, fw)
+    fw.close()
+
+
+# 从磁盘中加载数据到内存对象
+def grabTree(filename):
+    import pickle
+    fr = open(filename)
+    return pickle.load(fr)

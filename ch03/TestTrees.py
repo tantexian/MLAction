@@ -2,7 +2,9 @@
 # @author tantexian, <my.oschina.net/tantexian>
 # @since 2017/7/11
 import trees
+import treePlotter
 import unittest
+import eyeWithID3
 
 
 class TestTrees(unittest.TestCase):
@@ -63,3 +65,33 @@ class TestTrees(unittest.TestCase):
         print ("\n dataSet == %s" % (dataSet))
         tree = trees.createTree(dataSet, labels)
         print("\n tree == %s" % (tree))
+
+    def test_treeNums(self):
+        dataSet, labels = trees.createDataSet()
+        print ("\n dataSet == %s" % (dataSet))
+        tree = trees.createTree(dataSet, labels)
+        print("\n tree == %s" % (tree))
+        leafs = treePlotter.getNumLeafs(tree)
+        depth = treePlotter.getTreeDepth(tree)
+        print("\n leafs == %s depth == %s " % (leafs, depth))
+
+    def test_createPlot(self):
+        dataSet, labels = trees.createDataSet()
+        print ("\n dataSet == %s" % (dataSet))
+        tree = trees.createTree(dataSet, labels)
+        # 增加一个标签
+        tree['no surfacing'][3] = "maybe"
+        treePlotter.createPlot(tree)
+
+    def test_store_load(self):
+        dataSet, labels = trees.createDataSet()
+        print ("\n dataSet == %s" % (dataSet))
+        tree = trees.createTree(dataSet, labels)
+        print("\n tree == %s" % (tree))
+        fileName = "./mytree.txt"
+        trees.storeTree(tree, fileName)
+        newTree = trees.grabTree(fileName)
+        print("\n newTree == %s" % (newTree))
+
+    def test_eye_tree(self):
+        eyeWithID3.eyesTree()
