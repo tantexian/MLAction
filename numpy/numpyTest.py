@@ -62,8 +62,46 @@ class numpyTest(unittest.TestCase):
         print ("\n a == %s" % (a))
         print ("\n a.shape == %s a.shape[0] == %s\n" % (a.shape, a.shape[0]))
 
-    def test_one_zeros(self):
-        a = ones(10)
+    def test_ones(self):
+        # error
+        # a = ones(3,4);
+        # print ("\n a == %s" % (a))
+        a = ones((3, 4));
         print ("\n a == %s" % (a))
-        a = zeros(10)
+
+    # python的[[]]乘法和矩阵乘法不一致
+    def test_mult(self):
+        a = [[1, 2],
+             [3, 4]]
+        b = [[1],
+             [2]]
+        one = ones((2, 2))
+        mult = a * one
+        print ("\n mult == %s" % (mult))
+
+        mult = mat(a) * mat(one)
+        print ("\n mult == %s" % (mult))
+
+        # error?
+        mult = mat(a) * mat(b)
+        print ("\n mult == %s" % (mult))
+
+    def test_mul(self):
+        # a==3*2 b==2*1 则a*b==3*1
+        a = [[1, 2],
+             [3, 4],
+             [5, 6]]
+
+        b = [[1],
+             [2]]
+
+        c = mat(a) * mat(b)
+
+        print ("\n c == %s" % (c))
+
+    # 转秩矩阵（即沿着对角线交换矩阵对称位置数据）
+    def test_transpose(self):
+        a = arange(4).reshape(2, 2)
+        a = mat(a)
         print ("\n a == %s" % (a))
+        print ("\n a.transpose() == %s" % (a.transpose()))
