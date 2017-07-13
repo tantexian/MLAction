@@ -47,6 +47,7 @@ class kNNTest(unittest.TestCase):
     def test_autoNorm(self):
         fileName = "datingTestSet.txt"
         datingDataMat, datingLabels = kNN.file2matrix(fileName)
+        print ("\n datingDataMat == %s" % (datingDataMat))
         normDataSet, ranges, minVals = kNN.autoNorm(datingDataMat)
         print("\n normDataSet == %s \n ranges == %s \n minVals == %s \n" % (normDataSet, ranges, minVals))
 
