@@ -37,8 +37,8 @@ class kNNTest(unittest.TestCase):
         # 创建一幅图
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        # 散点图使用datingDataMat矩阵的第二、第三列数据，
-        # 分别表示特征值 横轴表示“玩视频游戏所耗时间百分比”
+        # 散点图使用datingDataMat矩阵的第1、第2列数据（从0开始），分别表示特征值
+        # 横轴表示“玩视频游戏所耗时间百分比”
         # 纵轴表示“每周所消费的冰淇淋公升数” 。
         # datingDataMat[:, 1] 表示矩阵中所有行中第一列的数据
         ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2], 15.0 * array(datingLabels), 15.0 * array(datingLabels))

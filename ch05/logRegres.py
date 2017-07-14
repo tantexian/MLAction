@@ -2,6 +2,7 @@
 # @author tantexian, <my.oschina.net/tantexian>
 # @since 2017/7/12
 from numpy import *
+import matplotlib.pyplot as plt
 
 
 # 返回数据矩阵及label矩阵向量
@@ -146,10 +147,10 @@ def plotBestFit1(weights, dataMat, labelMat):
     ycord2 = []
     for i in range(n):
         if int(labelMat[i]) == 1:
-            xcord1.append(dataArr[i, 1]);
+            xcord1.append(dataArr[i, 1])
             ycord1.append(dataArr[i, 2])
         else:
-            xcord2.append(dataArr[i, 1]);
+            xcord2.append(dataArr[i, 1])
             ycord2.append(dataArr[i, 2])
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -158,8 +159,8 @@ def plotBestFit1(weights, dataMat, labelMat):
     x = arange(-3.0, 3.0, 0.1)
     y = (-weights[0] - weights[1] * x) / weights[2]
     ax.plot(x, y)
-    plt.xlabel('X1');
-    plt.ylabel('X2');
+    plt.xlabel('X1')
+    plt.ylabel('X2')
     plt.show()
 
 
@@ -206,6 +207,7 @@ def colicTest():
     errorRate = (float(errorCount) / numTestVec)
     print "the error rate of this test is: %f" % errorRate
     return errorRate
+
 
 # 进行多次尝试
 def multiTest():
