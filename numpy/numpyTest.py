@@ -105,3 +105,32 @@ class numpyTest(unittest.TestCase):
         a = mat(a)
         print ("\n a == %s" % (a))
         print ("\n a.transpose() == %s" % (a.transpose()))
+        print ("\n a.T == %s" % (a.T))
+
+    def test_multiply(self):
+        a = arange(6).reshape(3, 2)
+        a = mat(a)
+        print ("\n a == %s" % (a))
+
+        b = arange(6).reshape(3, 2)
+        b = mat(b)
+        print ("\n b == %s" % (b))
+
+        # multiply为对应元素相乘
+        t = multiply(a, b)
+        print ("\n t == %s" % (t))
+
+        c = arange(4).reshape(2, 2)
+        c = mat(c)
+        print ("\n b == %s" % (c))
+
+        # * 为矩阵相乘
+        t2 = a * c
+        print ("\n t2 == %s" % (t2))
+
+    def test_split(self):
+        a = arange(15).reshape(5, 3)
+        a = mat(a)
+        print ("\n a == %s" % (a))
+        # 输出第3行（从0开始），所有列
+        print ("\n a[3, :] == %s" % (a[3, :]))
