@@ -147,7 +147,7 @@ def calcWs(alphas, dataArr, classLabels):
 
 
 # 根据alpha，w 及样本数据绘图
-def plot_simple_smo(dataMat, labelMat, ws, b, alphas):
+def plot_smo(dataMat, labelMat, ws, b, alphas):
     dataMat = mat(dataMat)
     b = array(b)[0]  # b原来是矩阵，先转为数组类型后其数组大小为（1,1），所以后面加[0]，变为(1,)
     fig = plt.figure()
@@ -183,3 +183,5 @@ def plot_simple_smo(dataMat, labelMat, ws, b, alphas):
         if alphas[i] > 0.0:
             ax.plot(dataMat[i, 0], dataMat[i, 1], 'ro')
     plt.show()
+
+

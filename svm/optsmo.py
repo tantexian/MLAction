@@ -36,12 +36,15 @@ def kernelTrans(X, A, kTup):  # calc the kernel or transform data to a higher di
     return K
 
 
+# 获取当前预测值与真实值得误差
 def calcEk(oS, k):
+    # 根据当前alphas的值，预测值为fXk，Ek为预测值与真实值的误差
     fXk = float(multiply(oS.alphas, oS.labelMat).T * oS.K[:, k] + oS.b)
     Ek = fXk - float(oS.labelMat[k])
     return Ek
 
 
+# 获取第二个alpha的值（保证在每次优化中采用最大步长）
 def selectJ(i, oS, Ei):  # this is the second choice -heurstic, and calcs Ej
     maxK = -1;
     maxDeltaE = 0;
@@ -53,17 +56,21 @@ def selectJ(i, oS, Ei):  # this is the second choice -heurstic, and calcs Ej
             if k == i: continue  # don't calc for i, waste of time
             Ek = calcEk(oS, k)
             deltaE = abs(Ei - Ek)
+            # 选择具有最大步长的j
             if (deltaE > maxDeltaE):
                 maxK = k;
                 maxDeltaE = deltaE;
                 Ej = Ek
         return maxK, Ej
     else:  # in this case (first time around) we don't have any valid eCache values
+        # 如果是第一次循环，则随机选取第二个alpha值j
         j = simplesmo.selectJrand(i, oS.m)
+        # 获取当前预测值与真实值得误差
         Ej = calcEk(oS, j)
     return j, Ej
 
 
+# 计算误差值，放入缓存中，供后续使用
 def updateEk(oS, k):  # after any alpha has changed update the new value in the cache
     Ek = calcEk(oS, k)
     oS.eCache[k] = [1, Ek]
@@ -73,6 +80,7 @@ def innerL(i, oS):
     Ei = calcEk(oS, i)
     if ((oS.labelMat[i] * Ei < -oS.tol) and (oS.alphas[i] < oS.C)) or (
                 (oS.labelMat[i] * Ei > oS.tol) and (oS.alphas[i] > 0)):
+        # 第二个alpha选择中的启发式方式（smo的简单版本中使用selectJrand随机选取）
         j, Ej = selectJ(i, oS, Ei)  # this has been changed from selectJrand
         alphaIold = oS.alphas[i].copy();
         alphaJold = oS.alphas[j].copy();
@@ -106,7 +114,8 @@ def innerL(i, oS):
         return 0
 
 
-def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):  # full Platt SMO
+def smoOpt(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):  # full Platt SMO
+    # 创建optStruct的对象oS
     oS = optStruct(mat(dataMatIn), mat(classLabels).transpose(), C, toler, kTup)
     iter = 0
     entireSet = True;
@@ -114,11 +123,13 @@ def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):  # full Pl
     while (iter < maxIter) and ((alphaPairsChanged > 0) or (entireSet)):
         alphaPairsChanged = 0
         if entireSet:  # go over all
+            # 遍历所有的值
             for i in range(oS.m):
                 alphaPairsChanged += innerL(i, oS)
                 print "fullSet, iter: %d i:%d, pairs changed %d" % (iter, i, alphaPairsChanged)
             iter += 1
         else:  # go over non-bound (railed) alphas
+            # 遍历非边界的值
             nonBoundIs = nonzero((oS.alphas.A > 0) * (oS.alphas.A < C))[0]
             for i in nonBoundIs:
                 alphaPairsChanged += innerL(i, oS)
