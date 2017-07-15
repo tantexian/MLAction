@@ -2,15 +2,15 @@
 # @author tantexian, <my.oschina.net/tantexian>
 # @since 2017/7/14
 import unittest
-import svmwithsmo
+import simplesmo
 
 
 class smoTest(unittest.TestCase):
     def test_simple_smo(self):
-        data_set, label_set = svmwithsmo.loadDataSet("testSet.txt")
+        data_set, label_set = simplesmo.loadDataSet("testSet.txt")
         print("\n data_set == %s" % (data_set))
         print("\n label_set == %s" % (label_set))
-        b, alpha = svmwithsmo.smoSimple(data_set, label_set, 0.6, 0.001, 40)
+        b, alpha = simplesmo.smoSimple(data_set, label_set, 0.6, 0.001, 40)
         print("\n b == %s" % (b))
         print("\n alpha == %s" % (alpha[alpha > 0]))
 
@@ -19,10 +19,10 @@ class smoTest(unittest.TestCase):
                 print("\n  data_set[i] == %s label_set[i] == %s " % (data_set[i], label_set[i]))
 
     def test_plot(self):
-        data_set, label_set = svmwithsmo.loadDataSet("testSet.txt")
+        data_set, label_set = simplesmo.loadDataSet("testSet.txt")
         print("\n data_set == %s" % (data_set))
         print("\n label_set == %s" % (label_set))
-        b, alpha = svmwithsmo.smoSimple(data_set, label_set, 0.6, 0.001, 40)
-        ws = svmwithsmo.calcWs(alpha, data_set, label_set)
+        b, alpha = simplesmo.smoSimple(data_set, label_set, 0.6, 0.001, 40)
+        ws = simplesmo.calcWs(alpha, data_set, label_set)
         # 其中红色点为支持向量
-        svmwithsmo.plot_simple_smo(data_set, label_set, ws, b, alpha)
+        simplesmo.plot_simple_smo(data_set, label_set, ws, b, alpha)

@@ -168,7 +168,10 @@ def plot_simple_smo(dataMat, labelMat, ws, b, alphas):
             xcord2.append(dataMat[i, 0])
             ycord2.append(dataMat[i, 1])
 
+    # 二维x，y轴画图，xcord1表示个样本数据的x坐标点构成的向量，ycord1为y坐标点构成的向量
     ax.scatter(xcord1, ycord1, s=30, c='orange', marker='s')
+
+    # label == 0 的样本数据画图
     ax.scatter(xcord2, ycord2, s=30, c='green')
 
     # ax.scatter(dataMat[:, 0].flatten().A[0], dataMat[:, 1].flatten().A[0])  # 注意flatten的用法
