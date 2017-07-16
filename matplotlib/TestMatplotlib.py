@@ -9,5 +9,5 @@ import matplotlib.pyplot as plt
 
 class TestMatplotlib(unittest.TestCase):
     def test_plot(self):
-        fig = plot.figure()
+        fig = plt.figure()
         ax = fig.add_subplot(111)
