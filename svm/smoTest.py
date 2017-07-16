@@ -4,6 +4,7 @@
 import unittest
 import simplesmo
 import optsmo
+import handwriting
 from numpy import *
 
 
@@ -77,3 +78,10 @@ class smoTest(unittest.TestCase):
         data0 = mat(data_set)[i]
         y = data0 * ws + b
         print("\n 根据样本第%s行数据 x == %s \n 得到预测值 == %s \n 真实分类值为 == %s" % (i, data0, y, label_set[i]))
+
+    def test_kernel_smo(self):
+        optsmo.testRbf()
+
+    # 测试手写准备率
+    def test_hand_writing(self):
+        handwriting.testDigits()
