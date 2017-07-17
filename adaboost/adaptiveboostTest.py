@@ -2,8 +2,10 @@
 # @author tantexian, <my.oschina.net/tantexian>
 # @since 2017/7/16
 import unittest
-import adaptiveboost
+
 from numpy import *
+
+import adaptiveboost
 
 
 class adaptiveboostTest(unittest.TestCase):
@@ -12,78 +14,90 @@ class adaptiveboostTest(unittest.TestCase):
         simp_data, label_data = adaptiveboost.loadSimpData()
         # 初始化权重，取平均值，均为0.2
         D = mat(ones((5, 1)) / 5)
-        bestStump, minError, bestClasEst  = adaptiveboost.buildStump(simp_data, label_data, D)
-        print("\n bestStump == %s" %(bestStump))
-        print("\n minError == %s" %(minError))
-        print("\n bestClasEst == %s" %(bestClasEst))
-
+        bestStump, minError, bestClasEst = adaptiveboost.buildStump(simp_data, label_data, D)
+        print("\n bestStump == %s" % (bestStump))
+        print("\n minError == %s" % (minError))
+        print("\n bestClasEst == %s" % (bestClasEst))
 
     def test_adaboost(self):
         simp_data, label_data = adaptiveboost.loadSimpData()
-        adaptiveboost.adaBoostTrainDS(simp_data, label_data, 10)
+        weakClassArr = adaptiveboost.adaBoostTrainDS(simp_data, label_data, 10)
+        print ("\n weakClassArr == %s" % (weakClassArr))
 
-    def test_lt_gt(self):
-        datMat = matrix([[1., 2.1],
-                         [2., 1.1],
-                         [1.3, 1.],
-                         [1., 1.],
-                         [2., 1.]])
-        classLabels = [1.0, 1.0, -1.0, -1.0, 1.0]
-        retArray = ones((shape(datMat)[0], 1))
-        print("\n retArray == %s" % (retArray))
+    def test_classify(self):
+        simp_data, label_data = adaptiveboost.loadSimpData()
+        weakClassArr = adaptiveboost.adaBoostTrainDS(simp_data, label_data, 10)
+        print ("\n weakClassArr == %s" % (weakClassArr))
+        classify = adaptiveboost.adaClassify([0, 0], weakClassArr)
+        print ("\n classify == %s" % (classify))
 
-        i = 1
-        rangeMin = datMat[:, i].min()
-        print("\n rangeMin == %s" % (rangeMin))
-        threshVal = rangeMin + 1
-        print("\n threshVal == %s" % (threshVal))
-        result = datMat[:, i] <= threshVal
-        print("\n result == %s" % (result))
-
-        # retArray[datMat[:, i] <= threshVal] = -1.0
-        # print("\n retArray == %s" %(retArray))
+        classify = adaptiveboost.adaClassify([[5, 5], [0, 0]], weakClassArr)
+        print ("\n\n\n second classify == %s" % (classify))
 
 
-        testMat = matrix([[False], [True], [True], [False], [True]])
-        # testMat = matrix([[1], [1], [0], [0], [1]])
-        # testMat = matrix([[1], [2], [3], [-4], [-1]])
-        retArray[testMat] = -1.0
-        print("\n retArray == %s" % (retArray))
+def test_lt_gt(self):
+    datMat = matrix([[1., 2.1],
+                     [2., 1.1],
+                     [1.3, 1.],
+                     [1., 1.],
+                     [2., 1.]])
+    classLabels = [1.0, 1.0, -1.0, -1.0, 1.0]
+    retArray = ones((shape(datMat)[0], 1))
+    print("\n retArray == %s" % (retArray))
 
-    def test_multipy(self):
-        # 其中值为1表示错误
-        errMat = matrix([[1],
-                         [0],
-                         [1],
-                         [0],
-                         [1]])
-        print("\n errMat == %s" % (errMat))
+    i = 1
+    rangeMin = datMat[:, i].min()
+    print("\n rangeMin == %s" % (rangeMin))
+    threshVal = rangeMin + 1
+    print("\n threshVal == %s" % (threshVal))
+    result = datMat[:, i] <= threshVal
+    print("\n result == %s" % (result))
 
-        D = mat(ones((5, 1)) / 5)
-        print("\n D == %s" % (D))
-        print("\n D.T == %s" % (D.T))
+    # retArray[datMat[:, i] <= threshVal] = -1.0
+    # print("\n retArray == %s" %(retArray))
 
-        # D.T为1*5行向量，errMat为5*3向量
-        weightedError = D.T * errMat
-        print("\n weightedError type == %s" % (type(weightedError)))
 
-        minErr = 1.5
+    testMat = matrix([[False], [True], [True], [False], [True]])
+    # testMat = matrix([[1], [1], [0], [0], [1]])
+    # testMat = matrix([[1], [2], [3], [-4], [-1]])
+    retArray[testMat] = -1.0
+    print("\n retArray == %s" % (retArray))
 
-        if weightedError < minErr:
-            print("\n weightedError(%s) < minErr(%s)" % (weightedError, minErr))
-        else:
-            print("\n weightedError(%s) >= minErr(%s)" % (weightedError, minErr))
 
-        minErr = 0.5
+def test_multipy(self):
+    # 其中值为1表示错误
+    errMat = matrix([[1],
+                     [0],
+                     [1],
+                     [0],
+                     [1]])
+    print("\n errMat == %s" % (errMat))
 
-        if weightedError < minErr:
-            print("\n weightedError(%s) < minErr(%s)" % (weightedError, minErr))
-        else:
-            print("\n weightedError(%s) >= minErr(%s)" % (weightedError, minErr))
+    D = mat(ones((5, 1)) / 5)
+    print("\n D == %s" % (D))
+    print("\n D.T == %s" % (D.T))
 
-        minErr = mat([[1.0]])
+    # D.T为1*5行向量，errMat为5*3向量
+    weightedError = D.T * errMat
+    print("\n weightedError type == %s" % (type(weightedError)))
 
-        if weightedError < minErr:
-            print("\n weightedError(%s) < minErr(%s)" % (weightedError, minErr))
-        else:
-            print("\n weightedError(%s) >= minErr(%s)" % (weightedError, minErr))
+    minErr = 1.5
+
+    if weightedError < minErr:
+        print("\n weightedError(%s) < minErr(%s)" % (weightedError, minErr))
+    else:
+        print("\n weightedError(%s) >= minErr(%s)" % (weightedError, minErr))
+
+    minErr = 0.5
+
+    if weightedError < minErr:
+        print("\n weightedError(%s) < minErr(%s)" % (weightedError, minErr))
+    else:
+        print("\n weightedError(%s) >= minErr(%s)" % (weightedError, minErr))
+
+    minErr = mat([[1.0]])
+
+    if weightedError < minErr:
+        print("\n weightedError(%s) < minErr(%s)" % (weightedError, minErr))
+    else:
+        print("\n weightedError(%s) >= minErr(%s)" % (weightedError, minErr))

@@ -41,7 +41,17 @@ def stumpClassify(dataMatrix, dimen, threshVal, threshIneq):  # just classify th
     return retArray
 
 
-# 遍历stumpClassify所有可能的输入值，找出数据集上最佳的单层决策树
+# 功能：遍历stumpClassify所有可能的输入值，找出数据集上最佳的单层决策树
+# 输入参数：
+# dataArr : 样本数据
+# classLabels : 类标签向量
+# D : 各特征值权值
+# 返回值：
+# bestStump : 最佳决策树相关信息
+# minError : 最佳错误
+# bestClasEst : 最佳预测值（针对真实classLabels的预测）
+# @author tantexian, <my.oschina.net/tantexian>
+# @since 2017/7/17
 def buildStump(dataArr, classLabels, D):
     dataMatrix = mat(dataArr);
     labelMat = mat(classLabels).T
@@ -79,8 +89,7 @@ def buildStump(dataArr, classLabels, D):
                 # 如果使用其他分类器的话，就需要考虑D上最佳分类器所有定义的计算过程
                 # D.T为1*m的行向量， errArr为m*1的列向量，weightedError为单个值[[val]]
                 weightedError = D.T * errArr  # calc total error multiplied by D
-                print "split: dim %d, thresh %.2f, thresh ineqal: %s, the weighted error is %.3f" % (
-                    i, threshVal, inequal, weightedError)
+                # print "split: dim %d, thresh %.2f, thresh ineqal: %s, the weighted error is %.3f" % (i, threshVal, inequal, weightedError)
                 # 如果当期weightedError<minError,更新minError
                 if weightedError < minError:
                     minError = weightedError
@@ -93,13 +102,13 @@ def buildStump(dataArr, classLabels, D):
     return bestStump, minError, bestClasEst
 
 
-# 功能：xx
+# 功能：adaBoostTrainDS训练单层决策树，通过迭代获取最终分类
 # 输入：
 # dataArr : 数据集
 # classLabels : 类标签
 # numIt : 迭代次数（如果误差到0则提前结束），整个算法唯一需要用户指定的参数
 # 返回：
-# xx : xx
+# weakClassArr : 返回每个迭代中的最佳决策树相关信息
 # @author tantexian, <my.oschina.net/tantexian>
 # @since 2017/7/16
 def adaBoostTrainDS(dataArr, classLabels, numIt=40):
@@ -113,23 +122,47 @@ def adaBoostTrainDS(dataArr, classLabels, numIt=40):
     for i in range(numIt):
         # 获取数据集上最佳的单层决策树
         bestStump, error, classEst = buildStump(dataArr, classLabels, D)  # build Stump
-        print "D:",D.T
-        # 计算步长alpha
-        alpha = float(0.5 * log((1.0 - error) / max(error, 1e-16)))  # calc alpha, throw in max(error,eps) to account for error=0
+        print "D:", D.T
+        # 计算步长alpha为公式：1/2*log(1-error/error)
+        # max(error, 1e-16)) 用于确保不会发生除0溢出 calc alpha, throw in max(error,eps) to account for error=0
+        alpha = float(0.5 * log((1.0 - error) / max(error, 1e-16)))
         # 保存当前alpha值
         bestStump['alpha'] = alpha
         weakClassArr.append(bestStump)  # store Stump Params in Array
-        print "classEst: ",classEst.T
+        print "classEst: ", classEst.T
         # 为下一次迭代计算D
         expon = multiply(-1 * alpha * mat(classLabels).T, classEst)  # exponent for D calc, getting messy
         D = multiply(D, exp(expon))  # Calc New D for next iteration
         D = D / D.sum()
         # calc training error of all classifiers, if this is 0 quit for loop early (use break)
-        # 错误率累加计算
+        # 错误率累加计算(classEst为上次计算的最佳单层决策树的最佳预测结果)
         aggClassEst += alpha * classEst
-        print "aggClassEst: ",aggClassEst.T
+        print "aggClassEst: ", aggClassEst.T
+        # sign函数(-1 if x < 0, 0 if x==0, 1 if x > 0)
         aggErrors = multiply(sign(aggClassEst) != mat(classLabels).T, ones((m, 1)))
         errorRate = aggErrors.sum() / m
         print "total error: ", errorRate
+        # 如果错误率为0，则提前退出迭代
         if errorRate == 0.0: break
-    return weakClassArr
+    return weakClassArr, aggClassEst
+
+
+# 功能：adptive boost分类函数
+# datToClass : xxx
+# classifierArr : xxx
+# 返回：xxx
+# @author tantexian, <my.oschina.net/tantexian>
+# @since 2017/7/17
+def adaClassify(datToClass, classifierArr):
+    dataMatrix = mat(datToClass)  # do stuff similar to last aggClassEst in adaBoostTrainDS
+    # 获取行
+    m = shape(dataMatrix)[0]
+    # 构建m*1的全零列向量
+    aggClassEst = mat(zeros((m, 1)))
+    for i in range(len(classifierArr)):
+        classEst = stumpClassify(dataMatrix, classifierArr[i]['dim'], \
+                                 classifierArr[i]['thresh'], \
+                                 classifierArr[i]['ineq'])  # call stump classify
+        aggClassEst += classifierArr[i]['alpha'] * classEst
+        print aggClassEst
+    return sign(aggClassEst)
