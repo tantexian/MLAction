@@ -1,7 +1,7 @@
 # coding=utf-8
 # @author tantexian, <my.oschina.net/tantexian>
 # @since 2017/7/17
-# 局部加权线性回归
+# 局部加权线性回归（缺点每次必须在整个数据集上运行，即必须保持所有训练数据）
 import matplotlib.pyplot as plt
 from numpy import *
 
