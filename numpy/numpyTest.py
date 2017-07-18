@@ -134,3 +134,15 @@ class numpyTest(unittest.TestCase):
         print ("\n a == %s" % (a))
         # 输出第3行（从0开始），所有列
         print ("\n a[3, :] == %s" % (a[3, :]))
+
+    # 求矩阵方差
+    def test_var(self):
+        a = arange(4).reshape(2, 2)
+        a = mat(a)
+        print ("\n a == %s" % (a))
+
+        theMean = mean(a)
+        print ("\n theMean == %s" % (theMean))
+
+        theVar = var(a)
+        print ("\n theVar == %s" % (theVar))
