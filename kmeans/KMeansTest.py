@@ -37,8 +37,36 @@ class MyTestCase(unittest.TestCase):
         ax = fig.add_subplot(111)
         xcord = data_mat[:, 0].A
         ycord = data_mat[:, 1].A
+
+        xCluster0 = []
+        yCluster0 = []
+        xCluster1 = []
+        yCluster1 = []
+        xCluster2 = []
+        yCluster2 = []
+        xCluster3 = []
+        yCluster3 = []
+
+        for i in range(shape(clusterAssment)[0]):
+            if clusterAssment[i, 0] == 0:
+                xCluster0.append(data_mat[i, 0])
+                yCluster0.append(data_mat[i, 1])
+            elif clusterAssment[i, 0] == 1:
+                xCluster1.append(data_mat[i, 0])
+                yCluster1.append(data_mat[i, 1])
+            elif clusterAssment[i, 0] == 2:
+                xCluster2.append(data_mat[i, 0])
+                yCluster2.append(data_mat[i, 1])
+            elif clusterAssment[i, 0] == 3:
+                xCluster3.append(data_mat[i, 0])
+                yCluster3.append(data_mat[i, 1])
+        ax.scatter(xCluster0, yCluster0, s=30, c='orange', marker='s')
+        ax.scatter(xCluster1, yCluster1, s=30, c='red', marker='p')
+        ax.scatter(xCluster2, yCluster2, s=30, c='blue', marker='*')
+        ax.scatter(xCluster3, yCluster3, s=30, c='black', marker='d')
+
         # 绘制原始数据
-        ax.scatter(xcord, ycord, s=10, c='orange', marker='s')
+        # ax.scatter(xcord, ycord, s=10, c='orange', marker='s')
 
         # 绘制质心点
         xcord2 = centroids[:, 0].A
