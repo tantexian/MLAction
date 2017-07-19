@@ -27,8 +27,8 @@ def reDraw(tolS, tolN):
     else:
         myTree = regTrees.createTree(reDraw.rawDat, ops=(tolS, tolN))
         yHat = compareRegression.createForeCast(myTree, reDraw.testDat)
-    reDraw.a.scatter(reDraw.rawDat[:, 0].A, reDraw.rawDat[:, 1].A, s=5)  # use scatter for data set
-    reDraw.a.plot(reDraw.testDat, yHat.A, linewidth=2.0)  # use plot for yHat
+    reDraw.a.scatter(reDraw.rawDat[:, 0].A, reDraw.rawDat[:, 1].A, s=5, c='red', marker='s')  # use scatter for data set
+    reDraw.a.plot(reDraw.testDat, yHat.A, 'g', linewidth=1.0)  # use plot for yHat
     reDraw.canvas.show()
 
 
