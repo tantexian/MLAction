@@ -47,13 +47,13 @@ def randCent(dataSet, k):
 # createCent : 根据样本数据的每列特征构建一个包含k个随机质心的集合函数
 # 返回：
 # centroids : 返回k行的随机质心集合
-# clusterAssment : 簇分配结果矩阵（第一列存储簇索引，第二列存储误差（当前点到簇质心的距离））
+# clusterAssment : 样本数据对应行簇分配结果矩阵（第一列存储簇索引，第二列存储误差（当前点到簇质心的距离））
 # @author tantexian, <my.oschina.net/tantexian>
 # @since 2017/7/19
 def kMeans(dataSet, k, distMeas=distEclud, createCent=randCent):
     # 获取样本数据行数
     m = shape(dataSet)[0]
-    # m*2的全零矩阵（用于存储每个点的簇分配结果）
+    # m*2的全零矩阵（用于存储样本数据集每个点(即：每行)的簇分配结果）
     # clusterAssment簇结果矩阵包含两列：第一列存储簇索引，第二列存储误差（当前点到簇质心的距离）
     clusterAssment = mat(zeros((m, 2)))  # create mat to assign data points
     # to a centroid, also holds SE of each point
@@ -86,3 +86,54 @@ def kMeans(dataSet, k, distMeas=distEclud, createCent=randCent):
             # 计算所有点的均值（axis=0表示沿矩阵列方向进行均值计算）
             centroids[cent, :] = mean(ptsInClust, axis=0)  # assign centroid to mean
     return centroids, clusterAssment
+
+
+# 功能：二分均值聚类
+# dataSet : 样本数据集
+# k : 聚类划分簇数目
+# distMeas : 距离函数
+# 返回：
+# centList : 返回k行的随机质心集合
+# clusterAssment : 样本数据对应行簇分配结果矩阵（第一列存储簇索引，第二列存储误差（当前点到簇质心的距离））
+# @author tantexian, <my.oschina.net/tantexian>
+# @since 2017/7/19
+def biKmeans(dataSet, k, distMeas=distEclud):
+    # 获取样本数据行
+    m = shape(dataSet)[0]
+    # m*2的全零矩阵（用于存储样本数据集每个点(即：每行)的簇分配结果）
+    # clusterAssment簇结果矩阵包含两列：第一列存储簇分配结果簇索引，第二列存储误差（当前点到簇质心的距离）
+    clusterAssment = mat(zeros((m, 2)))
+    # 创建一个初始簇
+    centroid0 = mean(dataSet, axis=0).tolist()[0]
+    # 保留所有质心
+    centList = [centroid0]  # create a list with one centroid
+    for j in range(m):  # calc initial Error
+        clusterAssment[j, 1] = distMeas(mat(centroid0), dataSet[j, :]) ** 2
+    while (len(centList) < k):
+        # SSE(Sum Of Squared)误差平方和, 聚类效果指标
+        lowestSSE = inf
+        for i in range(len(centList)):
+            # 尝试划分每一簇
+            ptsInCurrCluster = dataSet[nonzero(clusterAssment[:, 0].A == i)[0], :]  # get the data points currently in cluster i
+            # 此处k=2则会均分为2个质心簇
+            centroidMat, splitClustAss = kMeans(ptsInCurrCluster, 2, distMeas)
+            # 分别计算切分钱和切分后的误差平方和
+            sseSplit = sum(splitClustAss[:, 1])  # compare the SSE to the currrent minimum
+            sseNotSplit = sum(clusterAssment[nonzero(clusterAssment[:, 0].A != i)[0], 1])
+            print "sseSplit, and notSplit: ", sseSplit, sseNotSplit
+            # 如果切分后误差平方和更小，则保存本次划分
+            if (sseSplit + sseNotSplit) < lowestSSE:
+                bestCentToSplit = i
+                bestNewCents = centroidMat
+                bestClustAss = splitClustAss.copy()
+                lowestSSE = sseSplit + sseNotSplit
+        # 更新簇的分配结果
+        bestClustAss[nonzero(bestClustAss[:, 0].A == 1)[0], 0] = len(centList)  # change 1 to 3,4, or whatever
+        bestClustAss[nonzero(bestClustAss[:, 0].A == 0)[0], 0] = bestCentToSplit
+        print 'the bestCentToSplit is: ', bestCentToSplit
+        print 'the len of bestClustAss is: ', len(bestClustAss)
+        centList[bestCentToSplit] = bestNewCents[0, :].tolist()[0]  # replace a centroid with two best centroids
+        # 新的质心簇被添加到centList
+        centList.append(bestNewCents[1, :].tolist()[0])
+        clusterAssment[nonzero(clusterAssment[:, 0].A == bestCentToSplit)[0], :] = bestClustAss  # reassign new clusters, and SSE
+    return mat(centList), clusterAssment

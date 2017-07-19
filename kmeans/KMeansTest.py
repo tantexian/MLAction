@@ -74,6 +74,55 @@ class MyTestCase(unittest.TestCase):
         ax.scatter(xcord2, ycord2, s=100, c='red', marker='+')
         plt.show()
 
+    def test_bikmeans(self):
+        data_mat = mat(KMeans.loadDataSet("testSet2.txt"))
+        k = 3
+        centList, clusterAssment = KMeans.biKmeans(data_mat, k)
+        print ("\n centList == %s" % (centList))
+        print ("\n clusterAssment == %s" % (clusterAssment))
+
+        # plot
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+
+        # 使用local()函数动态定义变量
+        for i in arange(k):
+            locals()['xCluster' + str(i)] = []
+            locals()['yCluster' + str(i)] = []
+
+        for i in range(shape(clusterAssment)[0]):
+            locals()['xCluster' + str(int(clusterAssment[i, 0]))].append(data_mat[i, 0])
+            locals()['yCluster' + str(int(clusterAssment[i, 0]))].append(data_mat[i, 1])
+        print ("\n xCluster0 == %s" % (locals()['xCluster' + str(0)]))
+        print ("\n yCluster0 == %s" % (locals()['yCluster' + str(0)]))
+
+        for i in arange(k):
+            ax.scatter(locals()['xCluster' + str(i)], locals()['yCluster' + str(i)], s=30, c='orange', marker='s')
+
+        # for i in range(shape(clusterAssment)[0]):
+        #     if clusterAssment[i, 0] == 0:
+        #         xCluster0.append(data_mat[i, 0])
+        #         yCluster0.append(data_mat[i, 1])
+        #     elif clusterAssment[i, 0] == 1:
+        #         xCluster1.append(data_mat[i, 0])
+        #         yCluster1.append(data_mat[i, 1])
+        #     elif clusterAssment[i, 0] == 2:
+        #         xCluster2.append(data_mat[i, 0])
+        #         yCluster2.append(data_mat[i, 1])
+        #     elif clusterAssment[i, 0] == 3:
+        #         xCluster3.append(data_mat[i, 0])
+        #         yCluster3.append(data_mat[i, 1])
+        # ax.scatter(xCluster0, yCluster0, s=30, c='orange', marker='s')
+        # ax.scatter(xCluster1, yCluster1, s=30, c='red', marker='p')
+        # ax.scatter(xCluster2, yCluster2, s=30, c='blue', marker='*')
+        # ax.scatter(xCluster3, yCluster3, s=30, c='black', marker='d')
+
+        # 绘制质心点
+        xcord2 = centList[:, 0].A
+        ycord2 = centList[:, 1].A
+        ax.scatter(xcord2, ycord2, s=100, c='red', marker='+')
+        plt.show()
+
     def test_random(self):
         rand = random.rand(2, 3)
         print ("\n rand == %s" % (rand))
@@ -83,3 +132,15 @@ class MyTestCase(unittest.TestCase):
         print ("\n dataMat == \n %s" % (dataMat))
         centroids = KMeans.randCent(dataMat, 8)
         print ("\n centroids == \n %s" % (centroids))
+
+    def test_local(self):
+        for i in range(3):
+            locals()['a' + str(i)] = i
+        print 'a' + str(i)
+
+        for i in range(10):
+            locals()["x" + str(i)] = []
+
+        locals()["x" + str(i)].append(1)
+
+        print ("\n xxx == %s" % (locals()["x" + str(i)]))
