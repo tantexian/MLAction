@@ -69,11 +69,12 @@ def scanD(D, Ck, minSupport):
 def aprioriGen(Lk, k):  # creates Ck
     retList = []
     lenLk = len(Lk)
+    # 前k-2个项相同时，则合并
     for i in range(lenLk):
         for j in range(i + 1, lenLk):
-            L1 = list(Lk[i])[:k - 2];
+            L1 = list(Lk[i])[:k - 2]
             L2 = list(Lk[j])[:k - 2]
-            L1.sort();
+            L1.sort()
             L2.sort()
             if L1 == L2:  # if first k-2 elements are equal
                 retList.append(Lk[i] | Lk[j])  # set union
@@ -86,6 +87,7 @@ def apriori(dataSet, minSupport=0.5):
     L1, supportData = scanD(D, C1, minSupport)
     L = [L1]
     k = 2
+    # 扫描数据集，从Ck到Lk
     while (len(L[k - 2]) > 0):
         Ck = aprioriGen(L[k - 2], k)
         Lk, supK = scanD(D, Ck, minSupport)  # scan DB to get Lk
