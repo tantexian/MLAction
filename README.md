@@ -3,4 +3,4 @@
 
 ## KNN(K近邻)：
 
-![](https://gitee.com/tantexian/mlaction/blob/master/docs/static/knn_1.png)
+![](https://gitee.com/tantexian/mlaction/raw/master/docs/static/knn_1.png)
