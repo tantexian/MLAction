@@ -100,12 +100,9 @@ def datingClassTest():
         # normMat[i, :]表示获取第i行数据
         # normMat[numTestVecs:m, :] 表示numTestVecs:m行的数据作为样本数据
         classifierResult = classify0(normMat[i, :], normMat[numTestVecs:m, :], datingLabels[numTestVecs:m], 3)
-        print
-        "the classifier came back with: %d, the real answer is: %d" % (classifierResult, datingLabels[i])
+        print("the classifier came back with: %d, the real answer is: %d" % (classifierResult, datingLabels[i]))
         if (classifierResult != datingLabels[i]): errorCount += 1.0
-    print
-    "the total error rate is: %f" % (errorCount / float(numTestVecs))
-    print
+    print("the total error rate is: %f" % (errorCount / float(numTestVecs)))
     errorCount
 
 
@@ -119,8 +116,7 @@ def classifyPerson():
     normMat, ranges, minVals = autoNorm(datingDataMat)
     inArr = array([ffMiles, percentTats, iceCream, ])
     classifierResult = classify0((inArr - minVals) / ranges, normMat, datingLabels, 3)
-    print
-    "You will probably like this person: %s" % resultList[classifierResult - 1]
+    print ("You will probably like this person: %s" % resultList[classifierResult - 1])
 
 
 # 将filename对应的数字特征值保存到特征矩阵中
@@ -161,10 +157,7 @@ def handwritingClassTest():
         classNumStr = int(fileStr.split('_')[0])
         vectorUnderTest = img2vector('testDigits/%s' % fileNameStr)
         classifierResult = classify0(vectorUnderTest, trainingMat, hwLabels, 3)
-        print
-        "the classifier came back with: %d, the real answer is: %d" % (classifierResult, classNumStr)
+        print("the classifier came back with: %d, the real answer is: %d" % (classifierResult, classNumStr))
         if (classifierResult != classNumStr): errorCount += 1.0
-    print
-    "\nthe total number of errors is: %d" % errorCount
-    print
-    "\nthe total error rate is: %f" % (errorCount / float(mTest))
+    print("\nthe total number of errors is: %d" % errorCount)
+    print("\nthe total error rate is: %f" % (errorCount / float(mTest)))

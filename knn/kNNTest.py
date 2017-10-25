@@ -19,10 +19,10 @@ class kNNTest(unittest.TestCase):
     def test_classify0(self):
         group, labels = kNN.createDateSet()
         # 根据输入的【0，0】判别出属于哪种类型（labels）
-        result = kNN.classifyO([0, 0], group, labels, 3)
+        result = kNN.classify0([0, 0], group, labels, 3)
         print("result == %s" % (result))
 
-        result = kNN.classifyO([1, 1], group, labels, 3)
+        result = kNN.classify0([1, 1], group, labels, 3)
         print("result == %s" % (result))
 
     def test_file2mat(self):
